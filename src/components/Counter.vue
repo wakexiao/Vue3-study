@@ -1,5 +1,5 @@
 <template>
-  <dir>当前计数为： {{count}}</dir>
+  <div>当前计数为： {{count}}</div>
   <button @click="add">点我加一</button>
 </template>
 
