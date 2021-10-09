@@ -52,11 +52,19 @@ setup：
 
 
 
-
-
-大家好，今天我演讲的主题是Vue3 composition API 的介绍；大家应该都知道，vue3 发布到现在已经一年了；vue 从2更新到3，对于我们开发者去使用，最大的特性就是composition API；
-
 toRef toRefs
+
+Object.defineProperty与Proxy
+
+Object.defineProperty 的问题:
+1. 不能监听数组的变化： push, pop, shift, unshift,splice, sort, reverse 这些改变数组的方法都不能触发setter
+2. 必须遍历对象的每个属性
+3. 必须深层遍历嵌套的对象
+
+Proxy:
+1. 针对整个对象,而不是对象的某个属性,不需要对每个属性进行遍历
+2. 支持数组，不需要对数组的方法进行重载
+3. proxy 也是不支持嵌套的，可以在 get 里递归调用 Proxy 并返回
 
 生命周期
 
