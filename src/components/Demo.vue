@@ -49,7 +49,15 @@
                 console.log(list)
                 list.push({id: data.id ++, name: 'demo'})
             }
-            // return () => h('div', {id: 'render', propsTest: 66}, ['div 的内容', h('p', 'p 标签')]) // render 函数的优先级高于根据 template，只渲染render函数，不渲染template
+            // return 一个render 函数
+            // return () => h('div', {id: 'render', propsTest: 66}, ['div 的内容', h('p', 'p 标签')])
+            // return 一个 jsx
+            return () => (
+                <div>
+                    <div>姓名: {data.name}</div>
+                    <div>年龄：{data.age}</div>
+                </div>
+            )
             return {
                 data,
                 list,

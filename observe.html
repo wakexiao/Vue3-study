@@ -1,76 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  <script>
-    var arr = [1,2,3];
-    var arrProxy = new Proxy(arr, {
-      get: function (target, propKey, receiver) {
-        // target 代理对象
-        // propKey 操作的方法
-        // receiver proxy 对象
-        console.log('get----',target, propKey);
-        return Reflect.get(target, propKey, receiver);
-      },
-      set: function (target, propKey, value, receiver) {
-        // value 设置的值
-        console.log('set----', target, propKey, value)
-        return Reflect.set(target, propKey, value, receiver);
-      }
-    })
-    // arrProxy.push(4)
-    // get---- [1, 2, 3] push // 寻找 proxy.push 方法
-    // get---- [1, 2, 3] length // 获取当前的 length
-    // set---- [1, 2, 3] 3 4 // 设置 proxy[3] = 4
-    // set---- [1, 2, 3, 4] length 4 // 设置 proxy.length = 4
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const obj = {
+        info: {
+          name: "jack",
+        },
+      };
 
-
-    var obj = {
-      a: 1
-    }
-    var objProxy = new Proxy(obj, {
-      get: function (target, propKey, receiver) {
-        console.log('get----',target, propKey);
-        return Reflect.get(target, propKey, receiver);
-      },
-      set: function (target, propKey, value, receiver) {
-        console.log('set----', target, propKey, value)
-        return Reflect.set(target, propKey, value, receiver);
-      },
-      deleteProperty (target, key) {
-        console.log('delete----', target, key);
-        return Reflect.deleteProperty(target, key);
-      }
-    })
-
-
-    var deepObj = {
-      name: "deep object",
-      list: [1,2,3,4]
-    }
-    var handler = {
-      get: function (target, propKey, receiver) {
-        console.log('get----',target, propKey);
-        if(typeof target[propKey] === 'object' && target[propKey] !== null){
-          return new Proxy(target[propKey], handler);
+      function observe(data) {
+        if (typeof data === "object" && data !== null) {
+          Object.keys(data).forEach((key) => {
+            defineReactive(data, key, data[key]);
+          });
         }
-        return Reflect.get(target, propKey, receiver);
-      },
-      set: function (target, propKey, value, receiver) {
-        console.log('set----', target, propKey, value)
-        return Reflect.set(target, propKey, value, receiver);
-      },
-      deleteProperty (target, key) {
-        console.log('delete----', target, key);
-        return Reflect.deleteProperty(target, key);
       }
-    }
-    var deepObjProxy = new Proxy(deepObj, handler)
-  </script>
-</body>
+      function defineReactive(target, key, value) {
+        observe(value)
+        Object.defineProperty(target, key, {
+          get() {
+            console.log("defineProperty get ----", key);
+            return value;
+          },
+          set(newVal) {
+            console.log("defineProperty set ----", key, value);
+            value = newVal;
+          },
+          enumerable: true,
+          configurable: true,
+        });
+      }
+      observe(obj);
+
+      const arr = [1, 2, 3];
+      const arrProxy = new Proxy(arr, {
+        get: function(target, propKey, receiver) {
+          // target 代理对象
+          // propKey 操作的方法
+          // receiver proxy 对象
+          console.log("get ----", target, propKey);
+          return Reflect.get(target, propKey, receiver);
+        },
+        set: function(target, propKey, value, receiver) {
+          // value 设置的值
+          console.log("set ----", target, propKey, value);
+          return Reflect.set(target, propKey, value, receiver);
+        },
+      });
+      // arrProxy.push(4)
+      // get---- [1, 2, 3] push // 寻找 proxy.push 方法
+      // get---- [1, 2, 3] length // 获取当前的 length
+      // set---- [1, 2, 3] 3 4 // 设置 proxy[3] = 4
+      // set---- [1, 2, 3, 4] length 4 // 设置 proxy.length = 4
+
+      const rawObj = {
+        info: {
+          name: "jack",
+        },
+      };
+
+      const objProxy = new Proxy(rawObj, {
+        get: function(target, propKey, receiver) {
+          console.log("get ----", target, propKey);
+          return Reflect.get(target, propKey, receiver);
+        },
+        set: function(target, propKey, value, receiver) {
+          console.log("set ----", target, propKey, value);
+          return Reflect.set(target, propKey, value, receiver);
+        },
+        deleteProperty(target, key) {
+          console.log("delete ----", target, key);
+          return Reflect.deleteProperty(target, key);
+        },
+      });
+
+      const deepObj = {
+        name: "deep object",
+        data: {
+          list: [1, 2, 3, 4],
+        },
+      };
+      const handler = {
+        get: function(target, propKey, receiver) {
+          console.log("get----", target, propKey);
+          if (typeof target[propKey] === "object" && target[propKey] !== null) {
+            return new Proxy(target[propKey], handler);
+          }
+          return Reflect.get(target, propKey, receiver);
+        },
+        set: function(target, propKey, value, receiver) {
+          console.log("set----", target, propKey, value);
+          return Reflect.set(target, propKey, value, receiver);
+        },
+        deleteProperty(target, key) {
+          console.log("delete----", target, key);
+          return Reflect.deleteProperty(target, key);
+        },
+      };
+      const deepObjProxy = new Proxy(deepObj, handler);
+    </script>
+  </body>
 </html>
