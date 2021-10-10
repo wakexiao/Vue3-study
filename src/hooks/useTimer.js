@@ -1,8 +1,8 @@
 import {ref, computed, onMounted, onBeforeUnmount} from 'vue'
 import moment from 'moment'
 
-export default ()=> {
-  const time = ref(Date.now());
+export default (date = Date.now())=> {
+  const time = ref(date);
   const getTime = computed(()=> moment(time.value).format('YYYY-MM-DD kk:mm:ss'));
   let timer = null;
   onMounted(()=> {

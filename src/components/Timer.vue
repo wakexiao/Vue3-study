@@ -23,7 +23,7 @@ export default {
     onMounted(()=> { // setup 里的写的生命周期要比组件对象的生命周期限制性，查分出去的hooks定义的生命周期，按代码顺序执行
       console.log('onTimer  -------  onMounted')
     })
-    const {getTime} = useTimer();
+    const {getTime} = useTimer(Date.now());
     return {getTime}
   },
   mounted() {

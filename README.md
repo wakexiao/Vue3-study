@@ -39,6 +39,7 @@ Vue3 组件中的模板结构可以没有根标签、
 Vue3的升级是向下兼容的，在 Vue3 中依旧可以使用 optionsAPI，但是不建议和 Vue3 混用
 
 
+同一逻辑集中起来，复用性更强了
 composition API 感觉是借鉴了 react 的 hooks, 在setup中实现的一些功能，可以抽离出去定义一个hook，然后如果其他组件也需要用到，可以引入到setup方法中就可以了，和react hook类似的写法
 
 
@@ -70,3 +71,11 @@ Proxy:
 
 composition API 的优缺点
 options API 的优缺点
+
+
+一个功能所定义的所有api会放在一起（更加的高内聚，低耦合），这样做，即使项目很大，功能很多，我们都能快速的定位到这个功能所用到的所有API，而不像vue2 Options API 中一个功能所用到的API都是分散的。
+
+
+为什么要使用 Composition API：
+Composition API 是根据逻辑相关性组织代码的，提高可读性和可维护性
+基于函数组合的 API 更好的重用逻辑代码（在vue2 Options API中通过Mixins重用逻辑代码，容易发生命名冲突且关系不清）
